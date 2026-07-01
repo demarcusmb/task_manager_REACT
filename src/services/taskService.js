@@ -1,0 +1,42 @@
+import axios from "axios";
+
+const api = axios.create({
+    baseURL: import.meta.env.VITE_API_URL,
+    headers: {
+        "Content-Type" : "application/json",
+    },
+});
+
+// Each function
+// Sends HTTP request to backend
+// Extracts data
+// Returns results to components
+
+// Get All Tasks
+export const getTasks = async () => {
+    const {data} = await api.get;
+    return data;
+}
+
+// Get a Task
+export const getTask = async (id) => {
+    const { data } = await api.get(`/${id}`);
+    return data;
+}
+
+// Create a Task
+export const createTasks = async (task) => {
+    const { data } = await api.post("/", task);
+    return data;
+}
+
+// Update a Task
+export const updateTask = async (id, task) => {
+    const { data } = await api.put(`/${id}`, task);
+    return data;
+}
+
+// Delete a task
+export const deleteTask = async (id) => {
+    await api.delete(`/${id}`);
+}
