@@ -41,7 +41,7 @@ export default function TaskForm({ onSubmit, editingTask }) {
     }
     const handleSubmit = (e) => {
         e.preventDefault();
-        
+
         if(!title.trim()) return;
 
         onSubmit(title);
