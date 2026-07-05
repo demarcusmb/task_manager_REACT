@@ -1,5 +1,7 @@
 import axios from "axios";
 
+console.log(import.meta.env);
+console.log(import.meta.env.VITE_API_URL);
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
     headers: {
@@ -14,7 +16,7 @@ const api = axios.create({
 
 // Get All Tasks
 export const getTasks = async () => {
-    const {data} = await api.get;
+    const {data} = await api.get("/");
     return data;
 }
 
@@ -25,7 +27,7 @@ export const getTask = async (id) => {
 }
 
 // Create a Task
-export const createTasks = async (task) => {
+export const createTask = async (task) => {
     const { data } = await api.post("/", task);
     return data;
 }
