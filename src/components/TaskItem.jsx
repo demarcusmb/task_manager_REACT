@@ -26,7 +26,7 @@ export default function TaskItem({ task, onEdit, onDelete }) {
                     Edit
                 </button>
 
-                <button onClick={() => onDelete( task.id )}>
+                <button onClick={() => onDelete( task._id )}>
                     Delete
                 </button>
             </div>

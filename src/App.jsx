@@ -1,5 +1,10 @@
 import './App.css'
 import { useState, useEffect } from 'react'
+
+import UserRegister from "./components/UserRegister.jsx";
+import UserLogin from "./components/UserLogin.jsx";
+import { userRegister, userLogin } from"./services/userService.js";
+
 import TaskForm from "./components/TaskForm.jsx";
 import TaskList from "./components/TaskList.jsx";
 import {getTasks,
@@ -42,6 +47,48 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   // error stores error messages
   const [error, setError] = useState("");
+  // gets jwt token
+  const [token, setToken] = useState(localStorage.getItem("token"));
+
+  const handleRegister = async ( userName, password, email ) => {
+    try{
+      await userRegister({
+        userName, password, email
+      });
+
+      const data = await userLogin({
+        userName, password
+      });
+
+      localStorage.setItem("token", data.token);
+      setToken(data.token);
+      await fetchTasks();
+    } catch (error) {
+      setError("Failed to register." + error)
+    }
+  }
+
+  const handleLogin = async ( userName, password) => {
+    try {
+      const data = await userLogin({
+        userName,
+        password,
+      });
+
+      localStorage.setItem("token", data.token);
+      setToken(data.token);
+      await fetchTasks();
+      console.log("Logged in!");
+    } catch (error) {
+      setError("Failed to login. " + error)
+    }
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setToken(null);
+    setTasks([]);
+  };
 
   // Fetches tasks from the backend
   const fetchTasks = async() => {
@@ -51,16 +98,12 @@ export default function App() {
 
       const data = await getTasks();
       setTasks(data);
-    } catch (err) {
-      setError("Failed to load tasks.")
+    } catch (error) {
+      setError("Failed to load tasks." + error)
     } finally {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchTasks();
-  }, []);
 
 
   // Sends new tasks to the backend
@@ -68,8 +111,8 @@ export default function App() {
     try{
       const newTask = await createTask({ title });
       setTasks((prev) => [...prev, newTask]);
-    } catch (err) {
-      setError("Failed to create task.");
+    } catch (error) {
+      setError("Failed to create task." + error);
     }
   };
 
@@ -79,10 +122,10 @@ export default function App() {
       await deleteTask(id);
 
       setTasks((prev) =>
-      prev.filter((task) => task.id !== id)
+      prev.filter((task) => task._id !== id)
       );
-    } catch (err) {
-      setError("Failed to delete task.");
+    } catch (error) {
+      setError("Failed to delete task." + error);
     }
   };
 
@@ -94,19 +137,19 @@ export default function App() {
   // Updates a task from the backend
   const handleUpdateTask = async (title) => {
     try {
-      const updatedTask = await updateTask(editingTask.id, {
+      const updatedTask = await updateTask(editingTask._id, {
         title,
       });
 
       setTasks((prev) =>
         prev.map((task) =>
-        task.id === updatedTask.id ? updatedTask : task
+        task._id === updatedTask._id ? updatedTask : task
         )
       );
 
       setEditingTask(null);
-    } catch (err) {
-      setError("Failed to update task.");
+    } catch (error) {
+      setError("Failed to update task." + error);
     }
   };
 
@@ -120,26 +163,35 @@ export default function App() {
   };
 
   // Building the UI
+
   return (
       <div className="app">
         <h1>Task Manager</h1>
 
-        {error && <p className="error">{ error }</p>}
-
-        {loading ? (
-            <p>Loading tasks...</p>
+        {!token ? (
+            <>
+              <UserRegister onSubmit={handleRegister} />
+              <UserLogin onSubmit={handleLogin} />
+            </>
         ) : (
-            <TaskList
-              tasks={ tasks }
-              onEdit={ handleEditTask }
-              onDelete={ handleDeleteTask }
+            <>
+              <TaskForm
+                  onSubmit={handleSubmit}
+                  editingTask={editingTask}
               />
+
+              <TaskList
+                  tasks={tasks}
+                  onEdit={handleEditTask}
+                  onDelete={handleDeleteTask}
+              />
+
+              <button onClick={handleLogout}>
+                Logout
+              </button>
+            </>
         )}
 
-        <TaskForm
-          onSubmit={ handleSubmit }
-          editingTask={ editingTask }
-          />
       </div>
   );
 
