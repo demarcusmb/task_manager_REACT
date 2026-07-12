@@ -46,7 +46,7 @@ export default function UserRegister({ onSubmit })
             />
 
             <button type="submit">
-                { "Register User" }
+                Register User
             </button>
         </form>
     );
