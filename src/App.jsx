@@ -185,12 +185,13 @@ export default function App() {
                   onEdit={handleEditTask}
                   onDelete={handleDeleteTask}
               />
+
+              <button onClick={handleLogout}>
+                Logout
+              </button>
             </>
         )}
 
-        <button onClick={handleLogout}>
-          Logout
-        </button>
       </div>
   );
 
