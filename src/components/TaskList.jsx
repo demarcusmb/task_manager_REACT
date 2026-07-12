@@ -27,7 +27,7 @@ export default function TaskList({ tasks, onEdit, onDelete }) {
                 improve rendering performance,
                 prevents UI bugs when items change
                  */
-                key={task.id}
+                key={task._id}
                 task={task}
                 onEdit={onEdit}
                 onDelete={onDelete}

@@ -79,7 +79,7 @@ export default function App() {
       await deleteTask(id);
 
       setTasks((prev) =>
-      prev.filter((task) => task.id !== id)
+      prev.filter((task) => task._id !== id)
       );
     } catch (err) {
       setError("Failed to delete task.");
@@ -94,13 +94,13 @@ export default function App() {
   // Updates a task from the backend
   const handleUpdateTask = async (title) => {
     try {
-      const updatedTask = await updateTask(editingTask.id, {
+      const updatedTask = await updateTask(editingTask._id, {
         title,
       });
 
       setTasks((prev) =>
         prev.map((task) =>
-        task.id === updatedTask.id ? updatedTask : task
+        task._id === updatedTask._id ? updatedTask : task
         )
       );
 
