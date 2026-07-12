@@ -7,12 +7,12 @@ const api = axios.create({
     },
 });
 
-export const register = async (user) => {
+export const userRegister = async (user) => {
     const { data } = await api.post("/register", user);
     return data;
 }
 
-export const login = async (user) => {
+export const userLogin = async (user) => {
     const { data } = await api.post("/login", user);
     localStorage.setItem("token", data.token);
     return data;
