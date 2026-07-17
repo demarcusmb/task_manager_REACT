@@ -1,17 +1,13 @@
 import './App.css'
-import { useState, useEffect } from 'react'
+import {useState} from 'react'
 
 import UserRegister from "./components/UserRegister.jsx";
 import UserLogin from "./components/UserLogin.jsx";
-import { userRegister, userLogin } from"./services/userService.js";
+import {userLogin, userRegister} from "./services/userService.js";
 
 import TaskForm from "./components/TaskForm.jsx";
 import TaskList from "./components/TaskList.jsx";
-import {getTasks,
-        createTask,
-        updateTask,
-        deleteTask,
-} from "./services/taskService.js";
+import {createTask, deleteTask, getTasks, updateTask,} from "./services/taskService.js";
 
 /*
   How data flows:
@@ -49,9 +45,12 @@ export default function App() {
   const [error, setError] = useState("");
   // gets jwt token
   const [token, setToken] = useState(localStorage.getItem("token"));
+  // allows swap between register and login page
+  const [showLogin, setShowLogin] = useState(true);
 
   const handleRegister = async ( userName, password, email ) => {
     try{
+      setError("");
       await userRegister({
         userName, password, email
       });
@@ -70,6 +69,7 @@ export default function App() {
 
   const handleLogin = async ( userName, password) => {
     try {
+      setError("");
       const data = await userLogin({
         userName,
         password,
@@ -80,7 +80,9 @@ export default function App() {
       await fetchTasks();
       console.log("Logged in!");
     } catch (error) {
-      setError("Failed to login. " + error)
+      setError(
+          error.response?.data?.message || "Login failed."
+      );
     }
   }
 
@@ -119,6 +121,7 @@ export default function App() {
   // Delete task from backend
   const handleDeleteTask = async (id) => {
     try {
+      setError("");
       await deleteTask(id);
 
       setTasks((prev) =>
@@ -137,6 +140,7 @@ export default function App() {
   // Updates a task from the backend
   const handleUpdateTask = async (title) => {
     try {
+      setError("");
       const updatedTask = await updateTask(editingTask._id, {
         title,
       });
@@ -167,11 +171,41 @@ export default function App() {
   return (
       <div className="app">
         <h1>Task Manager</h1>
-
+        {error && <p className="error">{error}</p>}
         {!token ? (
             <>
-              <UserRegister onSubmit={handleRegister} />
-              <UserLogin onSubmit={handleLogin} />
+              {showLogin ? (
+                  <>
+                    <UserLogin onSubmit={handleLogin} />
+
+                    <p>
+                      Don't have an account?
+                    </p>
+
+                    <button
+                        type="button"
+
+                        onClick={() => { setShowLogin(false);  setError("");} }
+                    >
+                      Register
+                    </button>
+                  </>
+              ) : (
+                  <>
+                    <UserRegister onSubmit={handleRegister} />
+
+                    <p>
+                      Already have an account?
+                    </p>
+
+                    <button
+                        type="button"
+                        onClick={() => setShowLogin(true)}
+                    >
+                      Login
+                    </button>
+                  </>
+              )}
             </>
         ) : (
             <>
@@ -186,7 +220,7 @@ export default function App() {
                   onDelete={handleDeleteTask}
               />
 
-              <button onClick={handleLogout}>
+              <button onClick={() => {handleLogout(); setShowLogin(true);} }>
                 Logout
               </button>
             </>
