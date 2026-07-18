@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react";
+import {useEffect, useState} from "react";
 /*
     Flow of component:
     User types in input
