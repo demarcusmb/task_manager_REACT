@@ -42,7 +42,7 @@ export default function UserRegister({ onSubmit })
                 type="email"
                 value={ email }
                 onChange={ (e) => setEmail(e.target.value) }
-                placeholder="Enter Email"
+                placeholder="Enter Email (Optional)"
             />
 
             <button type="submit">

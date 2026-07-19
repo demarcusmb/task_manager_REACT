@@ -21,7 +21,7 @@ export default function TaskForm({ onSubmit, editingTask }) {
     // onSubmit is the function from App.jsx
     // editingTask is the task being edited
     const [ title, setTitle ] = useState("");
-
+    const [ description, setDescription] = useState("");
     // If editing fill input with task title
     // if not editing clears input
     useEffect(() => {
@@ -33,18 +33,15 @@ export default function TaskForm({ onSubmit, editingTask }) {
     }, [editingTask]);
 
     // Prevents page reload
-    // Prevents empty submissiosn
+    // Prevents empty submission
     // Sends data to App.jsx
     // Clears input after submission
-    const handleChange = (e) => {
-        setTitle(e.target.value);
-    }
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if(!title.trim()) return;
+        if(!title.trim() || !description.trim()) return;
 
-        onSubmit(title);
+        onSubmit(title, description);
 
         setTitle("");
     };
@@ -54,8 +51,15 @@ export default function TaskForm({ onSubmit, editingTask }) {
             <input
             type="text"
             value={ title }
-            onChange={ handleChange }
+            onChange={ e => setTitle(e.target.value) }
             placeholder="Enter task..."
+            />
+
+            <input
+                type="text"
+                value={ description }
+                onChange={ e => setDescription(e.target.value) }
+                placeholder="Enter Description..."
             />
 
             <button type="submit">
