@@ -109,9 +109,9 @@ export default function App() {
 
 
   // Sends new tasks to the backend
-  const handleCreateTask = async (title) => {
+  const handleCreateTask = async (title, description) => {
     try{
-      const newTask = await createTask({ title });
+      const newTask = await createTask({ title, description });
       setTasks((prev) => [...prev, newTask]);
     } catch (error) {
       setError("Failed to create task." + error);
@@ -138,11 +138,12 @@ export default function App() {
   };
 
   // Updates a task from the backend
-  const handleUpdateTask = async (title) => {
+  const handleUpdateTask = async (title, description) => {
     try {
       setError("");
       const updatedTask = await updateTask(editingTask._id, {
         title,
+        description,
       });
 
       setTasks((prev) =>
@@ -158,11 +159,11 @@ export default function App() {
   };
 
   // Sets form to be able to swap between create and update mode
-  const handleSubmit = (title) => {
+  const handleSubmit = (title, description) => {
     if (editingTask) {
-      handleUpdateTask(title);
+      handleUpdateTask(title, description);
     } else {
-      handleCreateTask(title);
+      handleCreateTask(title, description);
     }
   };
 

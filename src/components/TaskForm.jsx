@@ -27,8 +27,10 @@ export default function TaskForm({ onSubmit, editingTask }) {
     useEffect(() => {
         if(editingTask) {
             setTitle(editingTask.title);
+            setDescription(editingTask.description);
         } else {
             setTitle("");
+            setDescription("");
         }
     }, [editingTask]);
 
@@ -44,6 +46,7 @@ export default function TaskForm({ onSubmit, editingTask }) {
         onSubmit(title, description);
 
         setTitle("");
+        setDescription("");
     };
 
     return(
