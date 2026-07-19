@@ -176,6 +176,10 @@ export default function App() {
             <>
               {showLogin ? (
                   <>
+                    <p>
+                      Please allow 1 minute for backend to spinup after first request
+                    </p>
+
                     <UserLogin onSubmit={handleLogin} />
 
                     <p>
@@ -192,6 +196,11 @@ export default function App() {
                   </>
               ) : (
                   <>
+
+                    <p>
+                      Please allow 1 minute for backend to spinup after first request
+                    </p>
+
                     <UserRegister onSubmit={handleRegister} />
 
                     <p>
