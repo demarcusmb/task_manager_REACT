@@ -1,5 +1,5 @@
 import './App.css'
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 
 import UserRegister from "./components/UserRegister.jsx";
 import UserLogin from "./components/UserLogin.jsx";
@@ -106,6 +106,13 @@ export default function App() {
       setLoading(false);
     }
   };
+
+  // Loads taskList on page refresh
+  useEffect(() => {
+    if(token){
+      fetchTasks(token);
+    }
+  }, [token]);
 
 
   // Sends new tasks to the backend
@@ -223,13 +230,15 @@ export default function App() {
                   onSubmit={handleSubmit}
                   editingTask={editingTask}
               />
-
+              {loading ? (
+              <p>Loading tasks...</p>
+              ) : (
               <TaskList
                   tasks={tasks}
                   onEdit={handleEditTask}
                   onDelete={handleDeleteTask}
               />
-
+              )}
               <button onClick={() => {handleLogout(); setShowLogin(true);} }>
                 Logout
               </button>

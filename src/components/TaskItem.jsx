@@ -20,6 +20,7 @@ export default function TaskItem({ task, onEdit, onDelete }) {
     return (
         <div className= "task-item" >
             <span>{ task.title }</span>
+            <span>{ task.description }</span>
 
             <div className="actions">
                 <button onClick={() => onEdit( task )}>
